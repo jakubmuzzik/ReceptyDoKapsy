@@ -33,7 +33,7 @@ const AnimatedAppLoader = ({ children, loggedIn }) => {
                 Asset.loadAsync([
                     require('../assets/man.png'),
                     require('../assets/woman.png'),
-                    require('../assets/adaptive-icon.png'),
+                    require('../assets/icon.png'),
                     require('../assets/cuisines/asian.jpg'),
                     require('../assets/cuisines/czech.jpg'),
                     require('../assets/cuisines/indian.jpg'),

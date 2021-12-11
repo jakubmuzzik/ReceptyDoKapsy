@@ -55,7 +55,6 @@ export default function App() {
               <NavigationContainer ref={navigationRef}>
                 <Stack.Navigator
                   initialRouteName={loggedInOnInit ? 'Main' : 'AuthStack'}
-                  headerMode='none'
                   screenOptions={{
                     headerShown: false
                   }}

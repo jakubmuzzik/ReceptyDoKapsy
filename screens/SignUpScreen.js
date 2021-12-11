@@ -15,13 +15,14 @@ import { AntDesign, Entypo } from '@expo/vector-icons'
 import * as Animatable from 'react-native-animatable'
 import { normalize } from '../utils'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { firebase } from '../firebase/config'
 
 import { FONTS, COLORS, FONT_SIZES, SPACING } from '../constants'
 
 const SignUpScreen = ({ navigation }) => {
-
+    const insets = useSafeAreaInsets()
     const [data, setData] = useState({
         name: '',
         email: '',
@@ -138,169 +139,180 @@ const SignUpScreen = ({ navigation }) => {
                 colors={['#61E2FE', '#5A79E8']}
                 style={styles.container}
             >
-                <KeyboardAwareScrollView style={{ overflow: 'visible' }}>
-                    <SafeAreaView>
-                        <View style={styles.header}>
-                            <Text style={styles.text_header}>Create an account</Text>
+                <KeyboardAwareScrollView style={{ overflow: 'visible', marginTop: insets.top, marginBottom: insets.bottom }}>
+
+                    <View style={styles.header}>
+                        <Text style={styles.text_header}>Create an account</Text>
+                    </View>
+
+                    <Animatable.View
+                        animation="fadeInUpBig"
+                        style={styles.content}
+                    >
+                        <View style={styles.genderSelection}>
+                            <View style={styles.gender}>
+                                <Image
+                                    
+                                    source={require('../assets/icon.png')}
+                                    style={{ width: windowWidth * 0.5 }}
+                                />
+                            </View>
+                            <View style={styles.gender}>
+
+                            </View>
                         </View>
-
-                        <Animatable.View
-                            animation="fadeInUpBig"
-                            style={styles.content}
-                        >
-                            <Input
-                                placeholder="Full name"
-                                leftIcon={
-                                    <AntDesign
-                                        name="user"
-                                        size={20}
-                                        color={COLORS.black}
-                                    />
-                                }
-                                rightIcon={data.isNameCorrect ?
-                                    <Animatable.View
-                                        animation="bounceIn"
-                                    >
-                                        <AntDesign name="checkcircleo" size={20} color="green" />
-                                    </Animatable.View>
-                                    : null
-                                }
-                                label='Full name'
-                                inputStyle={[styles.input, { color: '#FFF' }]}
-                                labelStyle={[styles.input, { fontSize: FONT_SIZES.large }]}
-                                containerStyle={{ paddingHorizontal: 0 }}
-                                renderErrorMessage={false}
-                                inputContainerStyle={[styles.input_container, { borderBottomColor: (showErrorMessages && !data.isNameCorrect) ? COLORS.error: 'black'}]}
-                                onChangeText={onNameChange}
-                            />
-                            {!data.isNameCorrect && showErrorMessages ?
-                                <Animatable.View animation="fadeInLeft" duration={500}>
-                                    <Text style={styles.error_message}>Enter your Name</Text>
-                                </Animatable.View> : null
+                        <Input
+                            placeholder="Full name"
+                            leftIcon={
+                                <AntDesign
+                                    name="user"
+                                    size={20}
+                                    color={COLORS.black}
+                                />
                             }
-
-                            <Input
-                                placeholder="Email"
-                                leftIcon={
-                                    <AntDesign
-                                        name="user"
-                                        size={20}
-                                        color={COLORS.black}
-                                    />
-                                }
-                                rightIcon={data.isEmailCorrect ?
-                                    <Animatable.View
-                                        animation="bounceIn"
-                                    >
-                                        <AntDesign name="checkcircleo" size={20} color="green" />
-                                    </Animatable.View>
-                                    : null
-                                }
-                                label='Email'
-                                inputStyle={[styles.input, { color: '#FFF' }]}
-                                labelStyle={[styles.input, { fontSize: FONT_SIZES.large }]}
-                                containerStyle={styles.input_wrapper}
-                                inputContainerStyle={[styles.input_container, { borderBottomColor: (showErrorMessages && !data.isEmailCorrect) ? COLORS.error: 'black'}]}
-                                renderErrorMessage={false}
-                                onChangeText={onEmailChange}
-                            />
-                            {!data.isEmailCorrect && showErrorMessages ?
-                                <Animatable.View animation="fadeInLeft" duration={500}>
-                                    <Text style={styles.error_message}>Enter your Email</Text>
-                                </Animatable.View> : null
-                            }
-
-                            <Input
-                                placeholder="Type Password"
-                                leftIcon={
-                                    <AntDesign
-                                        name="lock"
-                                        size={20}
-                                        color={COLORS.black}
-                                    />
-                                }
-                                rightIcon={
-                                    <TouchableOpacity onPress={updateSecureTextEntry}>
-                                        {data.secureTextEntry ?
-                                            <Entypo name="eye-with-line" size={20} color={COLORS.black} />
-                                            :
-                                            <Entypo name="eye" size={20} color={COLORS.black} />
-                                        }
-                                    </TouchableOpacity>
-                                }
-                                label='Password'
-                                inputStyle={[styles.input, { color: '#FFF' }]}
-                                labelStyle={[styles.input, { fontSize: FONT_SIZES.large }]}
-                                containerStyle={styles.input_wrapper}
-                                inputContainerStyle={[styles.input_container, { borderBottomColor: (showErrorMessages && !data.isPasswordCorrect) ? COLORS.error: 'black'}]}
-                                renderErrorMessage={false}
-                                secureTextEntry={data.secureTextEntry ? true : false}
-                                onChangeText={onPasswordChange}
-                            />
-                            {!data.isPasswordCorrect && showErrorMessages ?
-                                <Animatable.View animation="fadeInLeft" duration={500}>
-                                    <Text style={styles.error_message}>Password must be at least 8 characters long</Text>
-                                </Animatable.View> : null
-                            }
-
-                            <Input
-                                placeholder="Confirm Your Password"
-                                leftIcon={
-                                    <AntDesign
-                                        name="lock"
-                                        size={20}
-                                        color={COLORS.black}
-                                    />
-                                }
-                                rightIcon={
-                                    <TouchableOpacity onPress={updateConfirmSecureTextEntry}>
-                                        {data.confirmSecureTextEntry ?
-                                            <Entypo name="eye-with-line" size={20} color={COLORS.black} />
-                                            :
-                                            <Entypo name="eye" size={20} color={COLORS.black} />
-                                        }
-                                    </TouchableOpacity>
-                                }
-                                label='Confirm Password'
-                                inputStyle={[styles.input, { color: '#FFF' }]}
-                                labelStyle={[styles.input, { fontSize: FONT_SIZES.large }]}
-                                containerStyle={styles.input_wrapper}
-                                inputContainerStyle={[styles.input_container, { borderBottomColor: (showErrorMessages && !data.isConfirmPasswordCorrect) ? COLORS.error: 'black'}]}
-                                renderErrorMessage={false}
-                                secureTextEntry={data.confirmSecureTextEntry ? true : false}
-                                onChangeText={onConfirmPasswordChange}
-                            />
-                            {!data.isConfirmPasswordCorrect && showErrorMessages ?
-                                <Animatable.View animation="fadeInLeft" duration={500}>
-                                    <Text style={styles.error_message}>Password must be at least 8 characters long</Text>
+                            rightIcon={data.isNameCorrect ?
+                                <Animatable.View
+                                    animation="bounceIn"
+                                >
+                                    <AntDesign name="checkcircleo" size={20} color="green" />
                                 </Animatable.View>
                                 : null
                             }
+                            label='Full name'
+                            inputStyle={[styles.input, { color: '#FFF' }]}
+                            labelStyle={[styles.input, { fontSize: FONT_SIZES.large }]}
+                            containerStyle={{ paddingHorizontal: 0 }}
+                            renderErrorMessage={false}
+                            inputContainerStyle={[styles.input_container, { borderBottomColor: (showErrorMessages && !data.isNameCorrect) ? COLORS.error : 'black' }]}
+                            onChangeText={onNameChange}
+                        />
+                        {!data.isNameCorrect && showErrorMessages ?
+                            <Animatable.View animation="fadeInLeft" duration={500}>
+                                <Text style={styles.error_message}>Enter your Name</Text>
+                            </Animatable.View> : null
+                        }
 
-
-                            <View style={styles.button_wrapper}>
-                                <Button
-                                    buttonStyle={styles.button}
-                                    titleStyle={{ fontFamily: FONTS.bold }}
-                                    title="Sign Up"
-                                    loading={data.buttonLoading}
-                                    onPress={onClickSignUp}
+                        <Input
+                            placeholder="Email"
+                            leftIcon={
+                                <AntDesign
+                                    name="user"
+                                    size={20}
+                                    color={COLORS.black}
                                 />
-                            </View>
-
-                            <View style={styles.footer}>
-                                <Text style={styles.footer_text}>
-                                    Already have an account?
-                                </Text>
-                                <Text
-                                    style={[styles.footer_text, { color: '#FFF', paddingHorizontal: 5, paddingVertical: 10 }]}
-                                    onPress={() => { navigation.navigate('SignInScreen') }}
+                            }
+                            rightIcon={data.isEmailCorrect ?
+                                <Animatable.View
+                                    animation="bounceIn"
                                 >
-                                    Sign In
-                                </Text>
-                            </View>
-                        </Animatable.View>
-                    </SafeAreaView>
+                                    <AntDesign name="checkcircleo" size={20} color="green" />
+                                </Animatable.View>
+                                : null
+                            }
+                            label='Email'
+                            inputStyle={[styles.input, { color: '#FFF' }]}
+                            labelStyle={[styles.input, { fontSize: FONT_SIZES.large }]}
+                            containerStyle={styles.input_wrapper}
+                            inputContainerStyle={[styles.input_container, { borderBottomColor: (showErrorMessages && !data.isEmailCorrect) ? COLORS.error : 'black' }]}
+                            renderErrorMessage={false}
+                            onChangeText={onEmailChange}
+                        />
+                        {!data.isEmailCorrect && showErrorMessages ?
+                            <Animatable.View animation="fadeInLeft" duration={500}>
+                                <Text style={styles.error_message}>Enter your Email</Text>
+                            </Animatable.View> : null
+                        }
+
+                        <Input
+                            placeholder="Type Password"
+                            leftIcon={
+                                <AntDesign
+                                    name="lock"
+                                    size={20}
+                                    color={COLORS.black}
+                                />
+                            }
+                            rightIcon={
+                                <TouchableOpacity onPress={updateSecureTextEntry}>
+                                    {data.secureTextEntry ?
+                                        <Entypo name="eye-with-line" size={20} color={COLORS.black} />
+                                        :
+                                        <Entypo name="eye" size={20} color={COLORS.black} />
+                                    }
+                                </TouchableOpacity>
+                            }
+                            label='Password'
+                            inputStyle={[styles.input, { color: '#FFF' }]}
+                            labelStyle={[styles.input, { fontSize: FONT_SIZES.large }]}
+                            containerStyle={styles.input_wrapper}
+                            inputContainerStyle={[styles.input_container, { borderBottomColor: (showErrorMessages && !data.isPasswordCorrect) ? COLORS.error : 'black' }]}
+                            renderErrorMessage={false}
+                            secureTextEntry={data.secureTextEntry ? true : false}
+                            onChangeText={onPasswordChange}
+                        />
+                        {!data.isPasswordCorrect && showErrorMessages ?
+                            <Animatable.View animation="fadeInLeft" duration={500}>
+                                <Text style={styles.error_message}>Password must be at least 8 characters long</Text>
+                            </Animatable.View> : null
+                        }
+
+                        <Input
+                            placeholder="Confirm Your Password"
+                            leftIcon={
+                                <AntDesign
+                                    name="lock"
+                                    size={20}
+                                    color={COLORS.black}
+                                />
+                            }
+                            rightIcon={
+                                <TouchableOpacity onPress={updateConfirmSecureTextEntry}>
+                                    {data.confirmSecureTextEntry ?
+                                        <Entypo name="eye-with-line" size={20} color={COLORS.black} />
+                                        :
+                                        <Entypo name="eye" size={20} color={COLORS.black} />
+                                    }
+                                </TouchableOpacity>
+                            }
+                            label='Confirm Password'
+                            inputStyle={[styles.input, { color: '#FFF' }]}
+                            labelStyle={[styles.input, { fontSize: FONT_SIZES.large }]}
+                            containerStyle={styles.input_wrapper}
+                            inputContainerStyle={[styles.input_container, { borderBottomColor: (showErrorMessages && !data.isConfirmPasswordCorrect) ? COLORS.error : 'black' }]}
+                            renderErrorMessage={false}
+                            secureTextEntry={data.confirmSecureTextEntry ? true : false}
+                            onChangeText={onConfirmPasswordChange}
+                        />
+                        {!data.isConfirmPasswordCorrect && showErrorMessages ?
+                            <Animatable.View animation="fadeInLeft" duration={500}>
+                                <Text style={styles.error_message}>Password must be at least 8 characters long</Text>
+                            </Animatable.View>
+                            : null
+                        }
+
+
+                        <View style={styles.button_wrapper}>
+                            <Button
+                                buttonStyle={styles.button}
+                                titleStyle={{ fontFamily: FONTS.bold }}
+                                title="Sign Up"
+                                loading={data.buttonLoading}
+                                onPress={onClickSignUp}
+                            />
+                        </View>
+
+                        <View style={styles.footer}>
+                            <Text style={styles.footer_text}>
+                                Already have an account?
+                            </Text>
+                            <Text
+                                style={[styles.footer_text, { color: '#FFF', paddingHorizontal: 5, paddingVertical: 10 }]}
+                                onPress={() => { navigation.navigate('SignInScreen') }}
+                            >
+                                Sign In
+                            </Text>
+                        </View>
+                    </Animatable.View>
                 </KeyboardAwareScrollView>
             </LinearGradient>
         </TouchableWithoutFeedback>
@@ -374,4 +386,12 @@ const styles = StyleSheet.create({
         fontSize: FONT_SIZES.x_small,
         marginTop: SPACING.xx_small
     },
+    genderSelection: {
+        flexDirection: 'row'
+    },
+    gender: {
+        flex:1, 
+        justifyContent: 'center', 
+        alignItems: 'center'
+    }
 })
