@@ -7,7 +7,7 @@ import {
     TouchableWithoutFeedback,
     Keyboard,
     Alert,
-    SafeAreaView
+    Image
 } from 'react-native'
 import { Input, Button } from 'react-native-elements'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -34,7 +34,8 @@ const SignUpScreen = ({ navigation }) => {
         isConfirmPasswordCorrect: false,
         secureTextEntry: true,
         confirmSecureTextEntry: true,
-        buttonLoading: false
+        buttonLoading: false,
+        gender: ''
     })
     const [showErrorMessages, setShowErrorMessages] = useState(false)
 
@@ -100,7 +101,7 @@ const SignUpScreen = ({ navigation }) => {
             buttonLoading: true
         })
 
-        const { email, name, password } = data
+        const { email, name, password, gender } = data
 
         firebase.auth().createUserWithEmailAndPassword(email, password)
             .then((response) => {
@@ -110,7 +111,10 @@ const SignUpScreen = ({ navigation }) => {
                         id: response.user.uid,
                         name,
                         email,
-                        createdDate: new Date()
+                        gender,
+                        createdDate: new Date(),
+                        createdRecipes: [],
+                        likedRecipes: []
                     })
                     .catch((error) => {
                         Alert.alert(error)
@@ -133,13 +137,23 @@ const SignUpScreen = ({ navigation }) => {
             })
     }
 
+    const onGenderPress = (gender) => {
+        setData({
+            ...data,
+            gender
+        })
+    }
+
     return (
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
             <LinearGradient
                 colors={['#61E2FE', '#5A79E8']}
                 style={styles.container}
             >
-                <KeyboardAwareScrollView style={{ overflow: 'visible', marginTop: insets.top, marginBottom: insets.bottom }}>
+                <KeyboardAwareScrollView 
+                    style={{ overflow: 'visible', marginTop: insets.top, marginBottom: insets.bottom }}
+                    showsVerticalScrollIndicator={false}
+                >
 
                     <View style={styles.header}>
                         <Text style={styles.text_header}>Create an account</Text>
@@ -147,22 +161,47 @@ const SignUpScreen = ({ navigation }) => {
 
                     <Animatable.View
                         animation="fadeInUpBig"
-                        style={styles.content}
                     >
+                        <Text style={[styles.input, { fontSize: FONT_SIZES.large, paddingBottom: SPACING.medium }]}>
+                            Who are you?
+                        </Text>
                         <View style={styles.genderSelection}>
-                            <View style={styles.gender}>
+                            <TouchableOpacity 
+                                style={styles.gender} 
+                                onPress={() => onGenderPress('man')}
+                            >
                                 <Image
-                                    
-                                    source={require('../assets/icon.png')}
-                                    style={{ width: windowWidth * 0.5 }}
+                                    resizeMode='contain'
+                                    source={require('../assets/man.png')}
+                                    style={{ 
+                                        width: normalize(50), 
+                                        height: normalize(50), 
+                                        tintColor: data.gender === 'man' ? null : COLORS.placeholder
+                                    }}
                                 />
-                            </View>
-                            <View style={styles.gender}>
-
-                            </View>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={styles.gender}
+                                onPress={() => onGenderPress('woman')}
+                            >
+                                <Image
+                                    resizeMode='contain'
+                                    source={require('../assets/woman.png')}
+                                    style={{ 
+                                        width: normalize(50), 
+                                        height: normalize(50),
+                                        tintColor: data.gender === 'woman' ? null : COLORS.placeholder
+                                    }}
+                                />
+                            </TouchableOpacity>
                         </View>
+                        {!data.gender && showErrorMessages ?
+                            <Animatable.View animation="fadeInLeft" duration={500}>
+                                <Text style={styles.error_message}>Select your gender</Text>
+                            </Animatable.View> : null
+                        }
                         <Input
-                            placeholder="Full name"
+                            placeholder="Jméno"
                             leftIcon={
                                 <AntDesign
                                     name="user"
@@ -178,17 +217,17 @@ const SignUpScreen = ({ navigation }) => {
                                 </Animatable.View>
                                 : null
                             }
-                            label='Full name'
+                            label='Jméno'
                             inputStyle={[styles.input, { color: '#FFF' }]}
                             labelStyle={[styles.input, { fontSize: FONT_SIZES.large }]}
-                            containerStyle={{ paddingHorizontal: 0 }}
+                            containerStyle={styles.input_wrapper}
                             renderErrorMessage={false}
                             inputContainerStyle={[styles.input_container, { borderBottomColor: (showErrorMessages && !data.isNameCorrect) ? COLORS.error : 'black' }]}
                             onChangeText={onNameChange}
                         />
                         {!data.isNameCorrect && showErrorMessages ?
                             <Animatable.View animation="fadeInLeft" duration={500}>
-                                <Text style={styles.error_message}>Enter your Name</Text>
+                                <Text style={styles.error_message}>Enter your name</Text>
                             </Animatable.View> : null
                         }
 
@@ -330,9 +369,6 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
         paddingTop: normalize(50),
         paddingBottom: SPACING.xx_large
-    },
-    content: {
-        paddingVertical: SPACING.xx_large
     },
     text_header: {
         color: '#fff',
