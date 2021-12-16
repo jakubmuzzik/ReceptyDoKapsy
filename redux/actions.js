@@ -1,9 +1,12 @@
 import {
     USER_STATE_CHANGE,
     CLEAR_DATA,
-    APP_SETTINGS_STATE_CHANGE
+    APP_SETTINGS_STATE_CHANGE,
+    NEWEST_RECIPES_STATE_CHANGE,
+    SAVED_RECIPES_STATE_CHANGE
 } from './actionTypes'
 import { firebase } from '../firebase/config'
+import { getContentByIds } from '../utils'
 
 export const fetchUser = () => (dispatch) => {
     return firebase.firestore()
@@ -12,13 +15,27 @@ export const fetchUser = () => (dispatch) => {
         .get()
         .then((snapshot) => {
             if (snapshot.exists) {
-                dispatch({ type: USER_STATE_CHANGE, currentUser: snapshot.data() })
+                const currentUser = snapshot.data()
+                dispatch({ type: USER_STATE_CHANGE, currentUser })
+                dispatch(fetchSavedRecipes(currentUser.savedRecipes))
                 console.log('user data fetched')
             } else {
                 dispatch({ type: USER_STATE_CHANGE, currentUser: null })
                 console.log('user does not exist')
             }
         })
+}
+
+const fetchSavedRecipes = (recipeIds) => (dispatch) => {
+    if (!recipeIds || recipeIds.length < 1) {
+        return
+    }
+
+    return getContentByIds([...recipeIds], 'recipes')
+            .then(savedRecipes => {
+                dispatch({ type: SAVED_RECIPES_STATE_CHANGE, savedRecipes })
+                console.log('saved recipes fetched')
+            })
 }
 
 export const clearData = () => ({
@@ -70,4 +87,23 @@ const uploadImageToFirestore = async (uri, folderName, photoId) => {
         .ref()
         .child(childPath)
         .put(blob)
+}
+
+export const fetchNewestRecipes = () => (dispatch) => {
+    return firebase.firestore()
+        .collection('recipes')
+        .orderBy('createdDate', 'desc')
+        .limit(10)
+        .get()
+        .then((snapshot) => {
+            let newestRecipes = snapshot.docs
+                .map(doc => {
+                    const data = doc.data()
+                    const id = doc.id
+                    return { id, ...data }
+                })
+
+            dispatch({ type: NEWEST_RECIPES_STATE_CHANGE, newestRecipes })
+            console.log('newest recipes fetched')
+        })
 }

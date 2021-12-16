@@ -1,6 +1,6 @@
-import { useState } from 'react'
-import { Dimensions, Platform, PixelRatio } from 'react-native'
-import { firebase } from '../firebase/config'
+import { Dimensions, Platform, PixelRatio, Text } from 'react-native'
+import Toast from 'react-native-root-toast'
+import React from 'react'
 
 const DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
@@ -23,6 +23,10 @@ export const normalize = (size, based = 'width') => {
   }
 }
 
+export const getDateObject = (timestamp) => {
+  return timestamp.hasOwnProperty('seconds') ? new Date(timestamp.seconds * 1000) : new Date(timestamp)
+}
+
 export const getDate = (timestamp, getDayName = false, getYear = false) => {
   if (!timestamp) {
     return ''
@@ -41,4 +45,39 @@ export const getDate = (timestamp, getDayName = false, getYear = false) => {
 
 export const deepClone = (data) => {
   return JSON.parse(JSON.stringify(data))
+}
+
+export const getContentByIds = (ids, path) => {
+  const db = firebase.firestore()
+  return new Promise((res) => {
+    if (!ids || !ids.length || !path) return res([])
+
+    const collectionPath = db.collection(path)
+    let batches = []
+
+    while (ids.length) {
+      // firestore limits batches to 10
+      const batch = ids.splice(0, 10)
+
+      // add the batch request to to a queue
+      batches.push(
+        new Promise(response => {
+          collectionPath
+            .where(
+              firebase.firestore.FieldPath.documentId(),
+              'in',
+              [...batch]
+            )
+            .get()
+            .then(results => response(results.docs.map(result => ({ id: result.id, ...result.data() }))))
+        })
+      )
+    }
+
+    // after all of the data is fetched, return it
+    Promise.all(batches).then(content => {
+      res(content.flat())
+    })
+
+  })
 }

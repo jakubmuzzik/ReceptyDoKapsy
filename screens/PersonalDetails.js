@@ -6,11 +6,16 @@ import { saveProfile } from '../redux/actions'
 import { Input } from 'react-native-elements'
 import { AntDesign } from '@expo/vector-icons'
 import * as Animatable from 'react-native-animatable'
-import { user } from '../redux/reducers/user'
+import Toast from 'react-native-root-toast'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { ActivityIndicator } from 'react-native-paper'
 
 const PersonalDetails = ({ currentUser, saveProfile, navigation }) => {
     const [userData, setUserData] = useState(currentUser)
+    const [isLoading, setIsLoading] = useState(false)
     const [showErrorMessages, setShowErrorMessages] = useState(false)
+
+    const insets = useSafeAreaInsets()
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -28,17 +33,40 @@ const PersonalDetails = ({ currentUser, saveProfile, navigation }) => {
                 </TouchableOpacity>
             )
         })
-    }, [])
+    }, [userData])
 
-    const onSavePress = () => {
-        console.log(userData.name)
+    const showToast = (message, variant) => {
+        Toast.show(<Text style={{ fontFamily: FONTS.medium }}>
+          {message}
+        </Text>, {
+          duration: 2500,
+          position: Toast.positions.TOP + insets.top,
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+          delay: 0,
+          opacity: 0.9,
+          backgroundColor: variant === 'error' ? COLORS.error : COLORS.darkestBlue
+        })
+      }
+
+    const onSavePress = async () => {
         if (!userData.name || userData.length < 1) {
-            console.log('empry')
             setShowErrorMessages(true)
             return
         }
-        //saveProfile(userData)
-        //navigation.goBack()
+
+        try {
+            setIsLoading(true)
+            await saveProfile(userData)
+            showToast('Profil byl aktualizován.')
+        } catch(e) {
+            console.error(e)
+            showToast('Při ukládání profilu se vyskytla chyba.', 'error')
+        } finally {
+            setIsLoading(false)
+            navigation.goBack()
+        }
     }
 
     return (
@@ -66,7 +94,10 @@ const PersonalDetails = ({ currentUser, saveProfile, navigation }) => {
                     <Text style={styles.error_message}>Jméno nemůže být prázdné</Text>
                 </Animatable.View> : null
             }
-        </View>
+            {isLoading && <View style={styles.spinner}>
+                <ActivityIndicator color='#000' size='large' />
+            </View>}
+         </View>
     )
 }
 
@@ -94,4 +125,15 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: COLORS.black,
     },
+    spinner: { 
+        backgroundColor:'grey', 
+        position: 'absolute', 
+        top:0, 
+        bottom:0, 
+        left:0, 
+        right: 0, 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        opacity: 0.3
+    }
 })

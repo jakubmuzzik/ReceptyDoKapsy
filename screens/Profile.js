@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { View, Text, StyleSheet, ScrollView } from 'react-native'
 import { useHeaderHeight } from '@react-navigation/elements'
 import { connect } from 'react-redux'

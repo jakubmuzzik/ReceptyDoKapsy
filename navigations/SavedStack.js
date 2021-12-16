@@ -1,28 +1,27 @@
 import React from 'react'
 import { TouchableOpacity } from 'react-native'
 import { createStackNavigator } from '@react-navigation/stack'
-import { MaterialCommunityIcons, FontAwesome } from '@expo/vector-icons'
-import RecipesHome from '../screens/RecipesHome'
-import RecipesList from '../screens/RecipesList'
+import { MaterialCommunityIcons, AntDesign } from '@expo/vector-icons'
+import SavedList from '../screens/SavedList'
 
 import { SPACING, FONTS } from '../constants'
 
 const Stack = createStackNavigator()
 
-const RecipesStack = ({ navigation }) => {
+const SavedStack = ({ navigation }) => {
     return (
         <Stack.Navigator
-            initialRouteName='RecipesHome'
+            initialRouteName='SavedList'
             screenOptions={{
                 headerStyle: { backgroundColor: 'transparent' }
             }}
         >
             <Stack.Screen
-                name="RecipesHome"
-                component={RecipesHome}
+                name="SavedList"
+                component={SavedList}
                 options={{
-                    headerTransparent: true,
-                    headerTitle: '',
+                    headerTitle: 'Uložené recepty',
+                    headerTitleStyle: { fontFamily: FONTS.bold },
                     headerLeft: () => (
                         <TouchableOpacity onPress={() => navigation.openDrawer()}
                             style={{ marginLeft: SPACING.medium }}
@@ -36,18 +35,8 @@ const RecipesStack = ({ navigation }) => {
                     )
                 }}
             />
-            <Stack.Screen
-                name="RecipesList"
-                component={RecipesList}
-                options={{
-                    headerTitle: '',
-                    headerBackTitle: 'Zpět',
-                    headerBackTitleStyle: { fontFamily: FONTS.bold },
-                    headerTitleStyle: { fontFamily: FONTS.bold }
-                }}
-            />
         </Stack.Navigator>
     )
 }
 
-export default RecipesStack
+export default SavedStack

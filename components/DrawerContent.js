@@ -76,13 +76,6 @@ const DrawerContent = (props) => {
                         label={() => <Text style={{ fontFamily: FONTS.medium }}>Moje recepty</Text>}
                         onPress={onCalendarPress}
                     />
-                    <DrawerItem
-                        icon={() => (
-                            <Fontisto name="favorite" size={24} color="black" />
-                        )}
-                        label={() => <Text style={{ fontFamily: FONTS.medium }}>Uložené recepty</Text>}
-                        onPress={onCalendarPress}
-                    />
                 </Drawer.Section>
             </DrawerContentScrollView>
 

@@ -3,13 +3,17 @@ import { View } from 'react-native'
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
 import RecipesStack from './RecipesStack'
 import ProfileStack from './ProfileStack'
-import { Ionicons, FontAwesome, FontAwesome5, Fontisto, MaterialIcons, Feather } from '@expo/vector-icons'
+import SavedStack from './SavedStack'
+import Search from '../screens/Search'
+import { Ionicons, FontAwesome, FontAwesome5, Fontisto } from '@expo/vector-icons'
 import { COLORS } from '../constants'
+import { Host } from 'react-native-portalize'
 
 const Tab = createMaterialBottomTabNavigator()
 
 const MainTabNavigation = (props) => {
     return (
+        <Host>
         <Tab.Navigator
             initialRouteName="RecipesStack"
             activeColor="#fff"
@@ -27,7 +31,7 @@ const MainTabNavigation = (props) => {
             />
             <Tab.Screen
                 name="Search"
-                component={RecipesStack}
+                component={Search}
                 options={{
                     tabBarLabel: 'Hledat',
                     tabBarColor: COLORS.purple,
@@ -67,7 +71,7 @@ const MainTabNavigation = (props) => {
             />
             <Tab.Screen
                 name="Saved"
-                component={RecipesStack}
+                component={SavedStack}
                 options={{
                     tabBarLabel: 'Uložené',
                     tabBarColor: COLORS.red,
@@ -88,6 +92,7 @@ const MainTabNavigation = (props) => {
                 }}
             />
         </Tab.Navigator>
+        </Host>
     )
 }
 

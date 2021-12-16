@@ -34,11 +34,21 @@ const AnimatedAppLoader = ({ children, loggedIn }) => {
                     require('../assets/man.png'),
                     require('../assets/woman.png'),
                     require('../assets/icon.png'),
+                    require('../assets/not_found.png'),
                     require('../assets/cuisines/asian.jpg'),
                     require('../assets/cuisines/czech.jpg'),
                     require('../assets/cuisines/indian.jpg'),
                     require('../assets/cuisines/mexican.jpg'),
-                    require('../assets/cuisines/italian.jpg')
+                    require('../assets/cuisines/italian.jpg'),
+                    require('../assets/flags/cz.png'),
+                    require('../assets/flags/gr.png'),
+                    require('../assets/flags/in.png'),
+                    require('../assets/flags/it.png'),
+                    require('../assets/flags/mx.png'),
+                    require('../assets/flags/sk.png'),
+                    require('../assets/flags/th.png'),
+                    require('../assets/flags/us.png'),
+                    require('../assets/flags/vn.png')
                 ]),
                 Font.loadAsync({
                     'MontserratAlternates-Bold': require('../assets/fonts/MontserratAlternates-Bold.ttf'),
