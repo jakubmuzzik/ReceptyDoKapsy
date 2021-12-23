@@ -3,56 +3,69 @@ import {
     View,
     Text,
     StyleSheet,
-    TouchableOpacity,
     Image
 } from 'react-native'
 import {
     FONTS,
     FONT_SIZES,
     COLORS,
-    SPACING
+    SPACING,
+    CATEGORIES
 } from '../constants'
 import { Card, Divider } from 'react-native-paper'
-import { normalize } from '../utils'
+import { normalize, getDate } from '../utils'
 
 const CARD_IMAGE_HEIGHT = normalize(150)
 
-const ListRecipe = ({ recipe, navigation }) => {
+const ListRecipe = ({ recipe, navigation, width }) => {
 
     const onRecipePress = () => {
-        //navigate
+        navigation.navigate('RecipeScreen', {
+            recipe
+        })
     }
 
+    const getLabel = (value, array) => array.find(c => c.value === value).label
+
     return (
-        <View style={styles.cardContainer}>
+        <View style={[styles.cardContainer, width ? {width : width} : {}]}>
             <Card style={styles.card} onPress={onRecipePress}>
                 <Card.Content style={styles.cardContent}>
-                    {recipe.picture ? (
+                    {recipe.picture ?
                         <Image
-                            source={{ uri: recipe.picture }}
+                            source={recipe.picture ? { uri: recipe.picture } : require('../assets/adaptive-icon.png')}
                             resizeMode="cover"
                             style={{
                                 height: CARD_IMAGE_HEIGHT
                             }}
+                        /> :
+                        <Image
+                            source={require('../assets/adaptive-icon.png')}
+                            resizeMode="cover"
+                            style={{
+                                height: CARD_IMAGE_HEIGHT,
+                                width: CARD_IMAGE_HEIGHT,
+                                alignSelf: 'center'
+                            }}
                         />
-                    ) : (
-                        <View style={{ paddingVertical: SPACING.small }}>
-                            <Image
-                                source={require('../assets/man.png')}
-                                resizeMode="contain"
-                                style={{
-                                    alignSelf: 'center',
-                                    height: CARD_IMAGE_HEIGHT - (SPACING.small * 2)
-                                }}
-                            />
-                        </View>
-                    )}
+                    }
+                    
                     <View style={styles.cardBody}>
-                       
-                    <Text>Name</Text>
-                    <Text>Category</Text>
-                    <Text>Cuisine</Text>
-                    <Text>CreatedDate</Text>
+
+                    <Text numberOfLines={1} style={{fontFamily: FONTS.medium, fontSize: FONT_SIZES.x_large}}>
+                        {recipe.name}
+                    </Text>
+                    <Text style={{fontFamily: FONTS.light, fontSize: FONT_SIZES.medium}}>
+                        {getLabel(recipe.category, CATEGORIES)}
+                    </Text>
+                    {!width &&
+                        <Text style={{fontFamily: FONTS.light, fontSize: FONT_SIZES.medium}}>
+                        Délka přípravy: {recipe.duration} min
+                    </Text>
+                    }
+                    <Text style={{fontFamily: FONTS.light, fontSize: FONT_SIZES.medium, color: COLORS.grey}}>
+                        Přidáno: {getDate(recipe.createdDate, false, true)}
+                    </Text>
 
                     </View>
                 </Card.Content>

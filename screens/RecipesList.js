@@ -7,7 +7,7 @@ import {
     Image,
     FlatList
 } from 'react-native'
-import { FONTS, FONT_SIZES, COLORS, SPACING } from '../constants'
+import { FONTS, FONT_SIZES, COLORS, SPACING, CATEGORIES, CUISINES } from '../constants'
 import { normalize, getDateObject } from '../utils'
 import { Portal } from 'react-native-portalize'
 import { Modalize } from 'react-native-modalize'
@@ -29,7 +29,7 @@ const DATE_FILTERS = [
 ]
 
 const RecipesList = ({ route, navigation }) => {
-    const { selection, selectionType } = route.params
+    const { label, selection, selectionType } = route.params
 
     const [isLoading, setIsLoading] = useState(true)
     const [recipes, setRecipes] = useState([])
@@ -43,7 +43,7 @@ const RecipesList = ({ route, navigation }) => {
 
     useLayoutEffect(() => {
         navigation.setOptions({
-            headerTitle: selection,
+            headerTitle: label,
             headerRight: () => (
                 <TouchableOpacity onPress={openFiltersModal}
                     style={{ marginRight: SPACING.medium }}
@@ -229,15 +229,6 @@ const RecipesList = ({ route, navigation }) => {
             </View>
         </>
     ))
-
-    const renderRecipe = ({ item, navigation }) => {
-        
-        return (
-            <View style={{height: 200, backgroundColor: '#000'}}>
-                <Text>{item.name}</Text>
-            </View>
-        )
-    }
 
     return (
         <>

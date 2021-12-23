@@ -44,3 +44,29 @@ export const FONT_SIZES = {
     xx_small: normalize(11.5),
     xxx_small: normalize(10)
 }
+
+export const CATEGORIES = [
+    { label: 'Burgery', value: 'burgers' },
+    { label: 'Fast Food', value: 'fastFood' },
+    { label: 'Fit', value: 'fit' },
+    { label: 'Mlsání', value: 'candies' },
+    { label: 'Oběd', value: 'lunch' },
+    { label: 'Párty', value: 'party' },
+    { label: 'Pizza', value: 'pizza' },
+    { label: 'Steaky', value: 'steaks' },
+    { label: 'Snídaně', value: 'breakfast' },
+    { label: 'Večeře', value: 'dinner' },
+    { label: 'Vegan', value: 'vegan' }
+]
+
+export const CUISINES = [
+    { label: 'Americká', value: 'american' },
+    { label: 'Vietnamská', value: 'vietnam' },
+    { label: 'Česká', value: 'czech' },
+    { label: 'Indická', value: 'indian' },
+    { label: 'Italská', value: 'italian' },
+    { label: 'Mexická', value: 'mexican' },
+    { label: 'Řecká', value: 'greek' },
+    { label: 'Slovenská', value: 'slovak' },
+    { label: 'Thajská', value: 'thai' }
+]

@@ -3,7 +3,8 @@ import {
     CLEAR_DATA,
     APP_SETTINGS_STATE_CHANGE,
     NEWEST_RECIPES_STATE_CHANGE,
-    SAVED_RECIPES_STATE_CHANGE
+    SAVED_RECIPES_STATE_CHANGE,
+    CREATED_RECIPES_STATE_CHANGE
 } from './actionTypes'
 import { firebase } from '../firebase/config'
 import { getContentByIds } from '../utils'
@@ -18,6 +19,7 @@ export const fetchUser = () => (dispatch) => {
                 const currentUser = snapshot.data()
                 dispatch({ type: USER_STATE_CHANGE, currentUser })
                 dispatch(fetchSavedRecipes(currentUser.savedRecipes))
+                dispatch(fetchCreatedRecipes(currentUser.createdRecipes))
                 console.log('user data fetched')
             } else {
                 dispatch({ type: USER_STATE_CHANGE, currentUser: null })
@@ -35,6 +37,18 @@ const fetchSavedRecipes = (recipeIds) => (dispatch) => {
             .then(savedRecipes => {
                 dispatch({ type: SAVED_RECIPES_STATE_CHANGE, savedRecipes })
                 console.log('saved recipes fetched')
+            })
+}
+
+const fetchCreatedRecipes = (recipeIds) => (dispatch) => {
+    if (!recipeIds || recipeIds.length < 1) {
+        return
+    }
+
+    return getContentByIds([...recipeIds], 'recipes')
+            .then(createdRecipes => {
+                dispatch({ type: CREATED_RECIPES_STATE_CHANGE, createdRecipes })
+                console.log('created recipes fetched')
             })
 }
 
@@ -106,4 +120,39 @@ export const fetchNewestRecipes = () => (dispatch) => {
             dispatch({ type: NEWEST_RECIPES_STATE_CHANGE, newestRecipes })
             console.log('newest recipes fetched')
         })
+}
+
+export const saveRecipe = (data) => async (dispatch, getState) => {
+    if (data.picture) {
+        const pictureId = Math.random().toString(36)
+        const result = await uploadImageToFirestore(data.picture, 'recipes', pictureId)
+        const downloadUrl = await result.ref.getDownloadURL()
+        data.picture = downloadUrl
+        console.log('Picture saved in Firestore')
+    }
+
+    const doc = await firebase.firestore()
+        .collection('recipes')
+        .add({
+            ...data
+        })
+
+    console.log('Recipe saved in Firestore')
+
+    data.id = doc.id
+
+    const userData = JSON.parse(JSON.stringify(getState().userState.currentUser))
+    userData.createdRecipes.push(doc.id)
+
+    await saveUserDataToFirestore(userData)
+    dispatch({ type: USER_STATE_CHANGE, currentUser: userData })
+    console.log('User updated in Firestore and Redux')
+
+    dispatch({type: CREATED_RECIPES_STATE_CHANGE, createdRecipes: getState().userState.createdRecipes.concat(data) })
+    console.log('Created Recipes added to Redux')
+
+    dispatch({ type: NEWEST_RECIPES_STATE_CHANGE, newestRecipes: getState().userState.newestRecipes.concat(data) })
+    console.log('Newest Recipes updated in Redux')
+
+    return data
 }

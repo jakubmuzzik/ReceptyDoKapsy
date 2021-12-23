@@ -1,6 +1,5 @@
 import { Dimensions, Platform, PixelRatio, Text } from 'react-native'
-import Toast from 'react-native-root-toast'
-import React from 'react'
+import { firebase } from '../firebase/config'
 
 const DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 

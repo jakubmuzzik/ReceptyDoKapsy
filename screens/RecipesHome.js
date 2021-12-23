@@ -8,16 +8,16 @@ import {
     Image
 } from 'react-native'
 import { useHeaderHeight } from '@react-navigation/elements'
-import { FONTS, FONT_SIZES, COLORS, SPACING } from '../constants'
+import { FONTS, FONT_SIZES, COLORS, SPACING, CATEGORIES, CUISINES } from '../constants'
 import { normalize } from '../utils'
 import { connect } from 'react-redux'
 import { Portal } from 'react-native-portalize'
 import { Modalize } from 'react-native-modalize'
 import { MaterialCommunityIcons, MaterialIcons, Ionicons, FontAwesome5 } from '@expo/vector-icons'
+import ListRecipe from '../components/ListRecipe'
 
 const RecipesHome = ({ newestRecipes = [], navigation }) => {
     const headerHeight = useHeaderHeight()
-
     const cuisinesModalRef = useRef()
     const categoriesModalRef = useRef()
 
@@ -29,9 +29,19 @@ const RecipesHome = ({ newestRecipes = [], navigation }) => {
         categoriesModalRef.current?.open()
     }
 
-    const onSelectionPress = (selection, selectionType, modalRef) => {
+    const onSelectionPress = (label, selectionType, modalRef) => {
         modalRef?.close()
+
+        let selection = ''
+
+        if(selectionType === 'category') {
+            selection = CATEGORIES.find(c => c.label === label).value
+        } else {
+            selection = CUISINES.find(c => c.label === label).value
+        }
+
         navigation.navigate('RecipesList', {
+            label,
             selection,
             selectionType
         })
@@ -409,10 +419,11 @@ const RecipesHome = ({ newestRecipes = [], navigation }) => {
                         decelerationRate='fast'
                         snapToAlignment='center'
                     >
-                        {newestRecipes.map(recipe => (
-                            <View style={styles.newestRecipeContainer}>
-                                <Text style={styles.newestRecipeText}>{recipe.name}</Text>
-                            </View>
+                        {newestRecipes.map((recipe, index) => (
+                            <ListRecipe key={index} recipe={recipe} navigation={navigation} width={normalize(250)}/> 
+                            // <View key={index} style={styles.newestRecipeContainer}>
+                            //     <Text style={styles.newestRecipeText}>{recipe.name}</Text>
+                            // </View>
                         ))}
                     </ScrollView>
                 </View>

@@ -2,11 +2,13 @@ import {
     USER_STATE_CHANGE,
     CLEAR_DATA,
     NEWEST_RECIPES_STATE_CHANGE,
-    SAVED_RECIPES_STATE_CHANGE
+    SAVED_RECIPES_STATE_CHANGE,
+    CREATED_RECIPES_STATE_CHANGE
 } from '../actionTypes'
 
 const INITIAL_STATE = {
     currentUser: null,
+    newestRecipes: [],
     createdRecipes: [],
     savedRecipes: []
 }
@@ -27,6 +29,11 @@ export const user = (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 savedRecipes: action.savedRecipes
+            }
+        case CREATED_RECIPES_STATE_CHANGE:
+            return {
+                ...state,
+                createdRecipes: action.createdRecipes
             }
         case CLEAR_DATA:
             return INITIAL_STATE

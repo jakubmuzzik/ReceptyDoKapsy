@@ -114,7 +114,7 @@ const SignUpScreen = ({ navigation }) => {
                         gender,
                         createdDate: new Date(),
                         createdRecipes: [],
-                        likedRecipes: []
+                        savedRecipes: []
                     })
                     .catch((error) => {
                         Alert.alert(error)

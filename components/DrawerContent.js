@@ -73,7 +73,7 @@ const DrawerContent = (props) => {
                         icon={() => (
                             <MaterialCommunityIcons name="playlist-check" size={24} color="black" />
                         )}
-                        label={() => <Text style={{ fontFamily: FONTS.medium }}>Moje recepty</Text>}
+                        label={() => <Text style={{ fontFamily: FONTS.medium }}>Vytvořené recepty</Text>}
                         onPress={onCalendarPress}
                     />
                 </Drawer.Section>

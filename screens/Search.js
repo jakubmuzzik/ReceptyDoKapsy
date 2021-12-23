@@ -1,10 +1,21 @@
 import React, { useState, useRef } from 'react'
-import { View, TouchableOpacity, StyleSheet, Platform, FlatList, Image, Pressable, Keyboard, Text, useWindowDimensions } from 'react-native'
+import { 
+    View, 
+    TouchableOpacity, 
+    StyleSheet, 
+    Platform, 
+    FlatList, 
+    Image, 
+    Pressable, 
+    Keyboard, 
+    Text, 
+    useWindowDimensions 
+} from 'react-native'
 import { SearchBar } from 'react-native-elements'
 import { normalize } from '../utils'
-import { FONTS, COLORS, FONT_SIZES } from '../constants'
+import { FONTS, COLORS, FONT_SIZES, CATEGORIES } from '../constants'
 import { firebase } from '../firebase/config'
-import { ListItem } from 'react-native-elements'
+import { ListItem, Avatar } from 'react-native-elements'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { ActivityIndicator } from 'react-native-paper'
 
@@ -60,21 +71,30 @@ export const Search = ({ navigation }) => {
             })
     }
 
+    const getCategorylabel = (value) => CATEGORIES.find(c => c.value === value).label
+
     const renderItem = ({ item }) => {
-        const onUserPress = () => {
-            //navigation.navigate("UserProfile", { user: item })
+        const onRecipePress = () => {
+            navigation.navigate("RecipeScreen", { recipe: item })
         }
 
         return (
-            <TouchableOpacity onPress={onUserPress}>
+            <TouchableOpacity onPress={onRecipePress}>
                 <ListItem bottomDivider>
-                    <Avatar
-                        rounded
-                        source={ require('../assets/man.png') }
-                        size={normalize(80)}
+                    <Image
+                        source={ item.picture ? {uri: item.picture} : require('../assets/adaptive-icon.png')}
+                        resizeMode="contain"
+                        style={{
+                            alignSelf: 'center',
+                            height: normalize(90),
+                            width: normalize(90),
+                            borderRadius: normalize(5)
+                        }}
                     />
                     <ListItem.Content>
-                        <ListItem.Title style={{ fontFamily: FONTS.medium }}>{item.name}</ListItem.Title>
+                        <ListItem.Title style={{ fontFamily: FONTS.bold, fontSize: FONT_SIZES.large }}>{item.name}</ListItem.Title>
+                        <ListItem.Subtitle style={{ fontFamily: FONTS.medium }}>{getCategorylabel(item.category)}</ListItem.Subtitle>
+                        <ListItem.Subtitle style={{ fontFamily: FONTS.medium }}>Délka přípravy: {item.duration} min</ListItem.Subtitle>
                     </ListItem.Content>
                     <ListItem.Chevron />
                 </ListItem>
