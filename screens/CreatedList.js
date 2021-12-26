@@ -1,15 +1,15 @@
 import React from 'react'
-import { FlatList, View, Image, Text, useWindowDimensions } from 'react-native'
+import { FlatList, Text, Image, View, useWindowDimensions } from 'react-native'
 import { connect } from 'react-redux'
 import ListRecipe from '../components/ListRecipe'
-import { FONTS, COLORS } from '../constants'
+import { FONTS, COLORS } from '../constants' 
 import { normalize } from '../utils'
 
-const SavedList = ({ savedRecipes = [], navigation }) => {
+const CreatedList = ({ createdRecipes= [], navigation }) => {
     const layout = useWindowDimensions()
 
-    return savedRecipes.length > 0 ? <FlatList
-        data={savedRecipes}
+    return createdRecipes.length > 0 ? <FlatList
+        data={createdRecipes}
         renderItem={({ item }) => ListRecipe({ recipe: item, navigation })}
         keyExtractor={item => item.id}
     /> : <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'white' }} >
@@ -25,11 +25,10 @@ const SavedList = ({ savedRecipes = [], navigation }) => {
             }}
         />
     </View>
-
 }
 
 const mapStateToProps = (store) => ({
-    savedRecipes: store.userState.savedRecipes
+    createdRecipes: store.userState.createdRecipes
 })
 
-export default connect(mapStateToProps)(SavedList)
+export default connect(mapStateToProps)(CreatedList)

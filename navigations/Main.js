@@ -5,10 +5,10 @@ import AppDrawer from './AppDrawer'
 import CreateRecipe from '../components/CreateRecipe'
 import { connect } from 'react-redux'
 import { fetchUser, clearData, fetchNewestRecipes } from '../redux/actions'
-import { COLORS, FONTS, SPACING, FONT_SIZES } from '../constants'
+import { FONTS, SPACING } from '../constants'
 import { Ionicons } from '@expo/vector-icons'
-import { normalize } from '../utils'
 import Recipe from '../screens/Recipe'
+import CreatedList from '../screens/CreatedList'
 
 const Stack = createStackNavigator()
 
@@ -38,6 +38,16 @@ const Main = ({ clearData, fetchUser, fetchNewestRecipes, navigation }) => {
                 component={Recipe}
                 options={{
                     headerTitle: '',
+                    headerBackTitle: 'Zpět',
+                    headerBackTitleStyle: { fontFamily: FONTS.bold },
+                    headerTitleStyle: { fontFamily: FONTS.bold },
+                }}
+            />
+            <Stack.Screen
+                name="CreatedRecipes"
+                component={CreatedList}
+                options={{
+                    headerTitle: 'Moje recepty',
                     headerBackTitle: 'Zpět',
                     headerBackTitleStyle: { fontFamily: FONTS.bold },
                     headerTitleStyle: { fontFamily: FONTS.bold },

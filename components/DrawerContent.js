@@ -25,12 +25,8 @@ const DrawerContent = (props) => {
         })
     }
 
-    const onSearchPress = () => {
-
-    }
-
-    const onCalendarPress = () => {
-
+    const onCreatedRecipesPress = () => {
+        navigation.navigate('CreatedRecipes')
     }
 
     return (
@@ -64,17 +60,10 @@ const DrawerContent = (props) => {
                 <Drawer.Section>
                     <DrawerItem
                         icon={() => (
-                            <MaterialCommunityIcons name="food-fork-drink" size={24} color="black" />
-                        )}
-                        label={() => <Text style={{ fontFamily: FONTS.medium }}>Kategorie receptů</Text>}
-                        onPress={onSearchPress}
-                    />
-                    <DrawerItem
-                        icon={() => (
                             <MaterialCommunityIcons name="playlist-check" size={24} color="black" />
                         )}
-                        label={() => <Text style={{ fontFamily: FONTS.medium }}>Vytvořené recepty</Text>}
-                        onPress={onCalendarPress}
+                        label={() => <Text style={{ fontFamily: FONTS.medium }}>Moje recepty</Text>}
+                        onPress={onCreatedRecipesPress}
                     />
                 </Drawer.Section>
             </DrawerContentScrollView>

@@ -1,4 +1,4 @@
-import React, { useRef, useCallback } from 'react'
+import React, { useRef, useCallback, useState } from 'react'
 import { View, Text, StyleSheet, ScrollView, Alert } from 'react-native'
 import { useHeaderHeight } from '@react-navigation/elements'
 import { connect } from 'react-redux'
@@ -10,11 +10,18 @@ import { MaterialIcons } from '@expo/vector-icons'
 import { Portal } from 'react-native-portalize'
 import { Modalize } from 'react-native-modalize'
 import * as ImagePicker from 'expo-image-picker'
+import { saveProfile } from '../redux/actions'
+import { ActivityIndicator } from 'react-native-paper'
+import Toast from 'react-native-root-toast'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
-const Profile = ({ currentUser, navigation }) => {
+const Profile = ({ currentUser, navigation, saveProfile }) => {
+    const [isSaving, setIsSaving] = useState(false)
+
     const editPhotoSheetRef = useRef()
 
     const headerHeight = useHeaderHeight()
+    const insets = useSafeAreaInsets()
 
     const onEditPhotoPress = () => {
         editPhotoSheetRef.current.open()
@@ -26,6 +33,21 @@ const Profile = ({ currentUser, navigation }) => {
 
     const onAppSettingsPress = () => {
         navigation.navigate('AppSettings')
+    }
+
+    const showToast = (message, variant) => {
+        Toast.show(<Text style={{ fontFamily: FONTS.medium }}>
+            {message}
+        </Text>, {
+            duration: 2500,
+            position: Toast.positions.TOP + insets.top,
+            shadow: true,
+            animation: true,
+            hideOnPress: true,
+            delay: 0,
+            opacity: 0.9,
+            backgroundColor: variant === 'error' ? COLORS.error : COLORS.darkestBlue
+        })
     }
 
     const takePicture = async () => {
@@ -45,9 +67,11 @@ const Profile = ({ currentUser, navigation }) => {
 
         if (!result.cancelled) {
             try {
-                //selectPictureModalRef.current.close()
-                //setData(data => ({ ...data, picture: result.uri }))
-                //setLottieVisible(true)
+                editPhotoSheetRef.current.close()
+                setIsSaving(true)
+                await saveProfile({ ...currentUser, profilePhotoUri: result.uri })
+                setIsSaving(false)
+                showToast('Profilová fotka byla aktualizována.')
             } catch (e) {
                 console.error(e)
             }
@@ -71,9 +95,11 @@ const Profile = ({ currentUser, navigation }) => {
 
         if (!result.cancelled) {
             try {
-                //selectPictureModalRef.current.close()
-                //setData(data => ({ ...data, picture: result.uri }))
-                //setLottieVisible(true)
+                editPhotoSheetRef.current.close()
+                setIsSaving(true)
+                await saveProfile({ ...currentUser, profilePhotoUri: result.uri })
+                setIsSaving(false)
+                showToast('Profilová fotka byla aktualizována.')
             } catch (e) {
                 console.error(e)
             }
@@ -123,15 +149,22 @@ const Profile = ({ currentUser, navigation }) => {
             marginTop: headerHeight,
             paddingHorizontal: SPACING.small
         }}>
-            <Avatar
+            {isSaving ? <Avatar
+                ImageComponent={() => 
+                    <View style={{alignItems: 'center', justifyContent: 'center', backgroundColor: 'grey', height: normalize(80)}}>
+                        <ActivityIndicator color='#000' />
+                    </View>}
+                rounded
+                size={normalize(80)}
+            /> : <Avatar
                 rounded
                 source={
                     currentUser?.profilePhoto ?
-                        { uri: props.currentUser.profilePhoto } : require('../assets/man.png')
+                        { uri: currentUser.profilePhoto } : require('../assets/man.png')
                 }
                 size={normalize(80)}
                 onPress={onEditPhotoPress}
-            />
+            />}
             <Text onPress={onEditPhotoPress} style={styles.editProfilePhotoText}>Upravit profilový obrázek</Text>
             <Divider orientation="vertical" width={2} style={{marginVertical: SPACING.small}}/>
             <View style={styles.userInfoSection}>
@@ -176,7 +209,7 @@ const mapStateToProps = (store) => ({
     currentUser: store.userState.currentUser
 })
 
-export default connect(mapStateToProps)(Profile)
+export default connect(mapStateToProps, { saveProfile })(Profile)
 
 const styles = StyleSheet.create({
     editProfilePhotoText: {

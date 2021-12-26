@@ -37,18 +37,18 @@ const PersonalDetails = ({ currentUser, saveProfile, navigation }) => {
 
     const showToast = (message, variant) => {
         Toast.show(<Text style={{ fontFamily: FONTS.medium }}>
-          {message}
+            {message}
         </Text>, {
-          duration: 2500,
-          position: Toast.positions.TOP + insets.top,
-          shadow: true,
-          animation: true,
-          hideOnPress: true,
-          delay: 0,
-          opacity: 0.9,
-          backgroundColor: variant === 'error' ? COLORS.error : COLORS.darkestBlue
+            duration: 2500,
+            position: Toast.positions.TOP + insets.top,
+            shadow: true,
+            animation: true,
+            hideOnPress: true,
+            delay: 0,
+            opacity: 0.9,
+            backgroundColor: variant === 'error' ? COLORS.error : COLORS.darkestBlue
         })
-      }
+    }
 
     const onSavePress = async () => {
         if (!userData.name || userData.length < 1) {
