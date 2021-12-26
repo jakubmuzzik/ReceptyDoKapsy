@@ -156,14 +156,14 @@ const SignUpScreen = ({ navigation }) => {
                 >
 
                     <View style={styles.header}>
-                        <Text style={styles.text_header}>Create an account</Text>
+                        <Text style={styles.text_header}>Vytvořit účet</Text>
                     </View>
 
                     <Animatable.View
                         animation="fadeInUpBig"
                     >
                         <Text style={[styles.input, { fontSize: FONT_SIZES.large, paddingBottom: SPACING.medium }]}>
-                            Who are you?
+                            Kdo jste?
                         </Text>
                         <View style={styles.genderSelection}>
                             <TouchableOpacity 
@@ -176,7 +176,7 @@ const SignUpScreen = ({ navigation }) => {
                                     style={{ 
                                         width: normalize(50), 
                                         height: normalize(50), 
-                                        tintColor: data.gender === 'man' ? null : COLORS.placeholder
+                                        tintColor: data.gender === 'man' ? null : COLORS.darkBlue
                                     }}
                                 />
                             </TouchableOpacity>
@@ -190,14 +190,14 @@ const SignUpScreen = ({ navigation }) => {
                                     style={{ 
                                         width: normalize(50), 
                                         height: normalize(50),
-                                        tintColor: data.gender === 'woman' ? null : COLORS.placeholder
+                                        tintColor: data.gender === 'woman' ? null : COLORS.darkBlue
                                     }}
                                 />
                             </TouchableOpacity>
                         </View>
                         {!data.gender && showErrorMessages ?
                             <Animatable.View animation="fadeInLeft" duration={500}>
-                                <Text style={styles.error_message}>Select your gender</Text>
+                                <Text style={styles.error_message}>Vyberte pohlaví</Text>
                             </Animatable.View> : null
                         }
                         <Input
@@ -227,7 +227,7 @@ const SignUpScreen = ({ navigation }) => {
                         />
                         {!data.isNameCorrect && showErrorMessages ?
                             <Animatable.View animation="fadeInLeft" duration={500}>
-                                <Text style={styles.error_message}>Enter your name</Text>
+                                <Text style={styles.error_message}>Vyplňte jméno</Text>
                             </Animatable.View> : null
                         }
 
@@ -258,12 +258,12 @@ const SignUpScreen = ({ navigation }) => {
                         />
                         {!data.isEmailCorrect && showErrorMessages ?
                             <Animatable.View animation="fadeInLeft" duration={500}>
-                                <Text style={styles.error_message}>Enter your Email</Text>
+                                <Text style={styles.error_message}>Vyplňte Email</Text>
                             </Animatable.View> : null
                         }
 
                         <Input
-                            placeholder="Type Password"
+                            placeholder="Vaše heslo"
                             leftIcon={
                                 <AntDesign
                                     name="lock"
@@ -280,7 +280,7 @@ const SignUpScreen = ({ navigation }) => {
                                     }
                                 </TouchableOpacity>
                             }
-                            label='Password'
+                            label='Heslo'
                             inputStyle={[styles.input, { color: '#FFF' }]}
                             labelStyle={[styles.input, { fontSize: FONT_SIZES.large }]}
                             containerStyle={styles.input_wrapper}
@@ -291,12 +291,12 @@ const SignUpScreen = ({ navigation }) => {
                         />
                         {!data.isPasswordCorrect && showErrorMessages ?
                             <Animatable.View animation="fadeInLeft" duration={500}>
-                                <Text style={styles.error_message}>Password must be at least 8 characters long</Text>
+                                <Text style={styles.error_message}>Heslo musí mít alespoň 8 znaků</Text>
                             </Animatable.View> : null
                         }
 
                         <Input
-                            placeholder="Confirm Your Password"
+                            placeholder="Potvrďte vaše heslo"
                             leftIcon={
                                 <AntDesign
                                     name="lock"
@@ -313,7 +313,7 @@ const SignUpScreen = ({ navigation }) => {
                                     }
                                 </TouchableOpacity>
                             }
-                            label='Confirm Password'
+                            label='Vaše heslo'
                             inputStyle={[styles.input, { color: '#FFF' }]}
                             labelStyle={[styles.input, { fontSize: FONT_SIZES.large }]}
                             containerStyle={styles.input_wrapper}
@@ -324,7 +324,7 @@ const SignUpScreen = ({ navigation }) => {
                         />
                         {!data.isConfirmPasswordCorrect && showErrorMessages ?
                             <Animatable.View animation="fadeInLeft" duration={500}>
-                                <Text style={styles.error_message}>Password must be at least 8 characters long</Text>
+                                <Text style={styles.error_message}>Heslo musí mít alespoň 8 znaků</Text>
                             </Animatable.View>
                             : null
                         }
@@ -334,7 +334,7 @@ const SignUpScreen = ({ navigation }) => {
                             <Button
                                 buttonStyle={styles.button}
                                 titleStyle={{ fontFamily: FONTS.bold }}
-                                title="Sign Up"
+                                title="Zaregistrovat se"
                                 loading={data.buttonLoading}
                                 onPress={onClickSignUp}
                             />
@@ -342,13 +342,13 @@ const SignUpScreen = ({ navigation }) => {
 
                         <View style={styles.footer}>
                             <Text style={styles.footer_text}>
-                                Already have an account?
+                                Již máte účet?
                             </Text>
                             <Text
                                 style={[styles.footer_text, { color: '#FFF', paddingHorizontal: 5, paddingVertical: 10 }]}
                                 onPress={() => { navigation.navigate('SignInScreen') }}
                             >
-                                Sign In
+                                Přihlásit se
                             </Text>
                         </View>
                     </Animatable.View>

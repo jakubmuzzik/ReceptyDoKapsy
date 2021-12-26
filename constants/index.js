@@ -70,3 +70,15 @@ export const CUISINES = [
     { label: 'Slovenská', value: 'slovak' },
     { label: 'Thajská', value: 'thai' }
 ]
+
+export const CUSINES_FLAGS = {
+    'american': require('../assets/flags/us.png'),
+    'vietnam' : require('../assets/flags/vn.png'),
+    'czech' : require('../assets/flags/cz.png'),
+    'indian' : require('../assets/flags/in.png'),
+    'italian' : require('../assets/flags/it.png'),
+    'mexican' : require('../assets/flags/mx.png'),
+    'greek' : require('../assets/flags/gr.png'),
+    'slovak' : require('../assets/flags/sk.png'),
+    'thai' : require('../assets/flags/th.png'),
+}

@@ -1,20 +1,23 @@
-import React, { useEffect } from 'react'
-import { View, Text, StyleSheet, ScrollView } from 'react-native'
+import React, { useRef, useCallback } from 'react'
+import { View, Text, StyleSheet, ScrollView, Alert } from 'react-native'
 import { useHeaderHeight } from '@react-navigation/elements'
 import { connect } from 'react-redux'
-import { Avatar, Divider } from 'react-native-elements'
+import { Avatar, Divider, Button } from 'react-native-elements'
 import { normalize, getDate } from '../utils'
 import { FONTS, FONT_SIZES, COLORS, SPACING } from '../constants'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { MaterialIcons } from '@expo/vector-icons'
+import { Portal } from 'react-native-portalize'
+import { Modalize } from 'react-native-modalize'
+import * as ImagePicker from 'expo-image-picker'
 
 const Profile = ({ currentUser, navigation }) => {
+    const editPhotoSheetRef = useRef()
+
     const headerHeight = useHeaderHeight()
-    const insets = useSafeAreaInsets()
 
     const onEditPhotoPress = () => {
-        
+        editPhotoSheetRef.current.open()
     }
 
     const onPersonalDetailsPress = () => {
@@ -24,6 +27,93 @@ const Profile = ({ currentUser, navigation }) => {
     const onAppSettingsPress = () => {
         navigation.navigate('AppSettings')
     }
+
+    const takePicture = async () => {
+        let permissionResult = await ImagePicker.requestCameraPermissionsAsync()
+
+        if (permissionResult.granted === false) {
+            Alert.alert("Permission to access camera roll is required!");
+            return
+        }
+
+        let result = await ImagePicker.launchCameraAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 0.5
+        });
+
+        if (!result.cancelled) {
+            try {
+                //selectPictureModalRef.current.close()
+                //setData(data => ({ ...data, picture: result.uri }))
+                //setLottieVisible(true)
+            } catch (e) {
+                console.error(e)
+            }
+        }
+    }
+
+    const pickImage = async () => {
+        let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync()
+
+        if (permissionResult.granted === false) {
+            Alert.alert("Permission to access your gallery is required!")
+            return
+        }
+
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 0.5
+        })
+
+        if (!result.cancelled) {
+            try {
+                //selectPictureModalRef.current.close()
+                //setData(data => ({ ...data, picture: result.uri }))
+                //setLottieVisible(true)
+            } catch (e) {
+                console.error(e)
+            }
+        }
+    }
+
+    const renderEditPhotoSheetContent = useCallback(() => (
+        <View style={styles.panel}>
+            <View style={styles.button_wrapper}>
+                <Button
+                    buttonStyle={styles.button}
+                    titleStyle={{ fontFamily: FONTS.bold, color: COLORS.darkBlue }}
+                    title="Udělat fotku"
+                    onPress={takePicture}
+                    type="outline"
+                    icon={{
+                        name: 'photo-camera',
+                        size: 25,
+                        type: 'material-icons',
+                        color: COLORS.darkBlue
+                    }}
+                />
+            </View>
+            <View style={styles.button_wrapper}>
+                <Button
+                    buttonStyle={styles.button}
+                    titleStyle={{ fontFamily: FONTS.bold, color: COLORS.darkBlue }}
+                    title="Vybrat z knihovny"
+                    onPress={pickImage}
+                    type="outline"
+                    icon={{
+                        name: 'photo-library',
+                        size: 25,
+                        type: 'material-icons',
+                        color: COLORS.darkBlue
+                    }}
+                />
+            </View>
+        </View>
+    ))
 
     return (
         <View style={{ 
@@ -40,6 +130,7 @@ const Profile = ({ currentUser, navigation }) => {
                         { uri: props.currentUser.profilePhoto } : require('../assets/man.png')
                 }
                 size={normalize(80)}
+                onPress={onEditPhotoPress}
             />
             <Text onPress={onEditPhotoPress} style={styles.editProfilePhotoText}>Upravit profilový obrázek</Text>
             <Divider orientation="vertical" width={2} style={{marginVertical: SPACING.small}}/>
@@ -72,6 +163,11 @@ const Profile = ({ currentUser, navigation }) => {
                     </TouchableOpacity>
                 </View>
             </View>
+            <Portal>
+                <Modalize ref={editPhotoSheetRef} adjustToContentHeight={true}>
+                    {renderEditPhotoSheetContent()}
+                </Modalize>
+            </Portal>
         </View>
     )
 }
@@ -105,5 +201,18 @@ const styles = StyleSheet.create({
         color: COLORS.blue, 
         fontSize: FONT_SIZES.medium,
         paddingVertical: SPACING.xx_small
-    }
+    },
+    panel: {
+        padding: SPACING.medium
+    },
+    button_wrapper: {
+        marginBottom: normalize(15, 'height')
+    },
+    button: {
+        //backgroundColor: COLORS.darkBlue,
+        height: normalize(38, 'height'),
+        borderRadius: normalize(10),
+        borderColor: COLORS.darkBlue,
+        borderWidth: 1
+    },
 })

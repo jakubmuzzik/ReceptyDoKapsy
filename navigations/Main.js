@@ -37,7 +37,10 @@ const Main = ({ clearData, fetchUser, fetchNewestRecipes, navigation }) => {
                 name="RecipeScreen"
                 component={Recipe}
                 options={{
-                    //headerShown: false,
+                    headerTitle: '',
+                    headerBackTitle: 'Zpět',
+                    headerBackTitleStyle: { fontFamily: FONTS.bold },
+                    headerTitleStyle: { fontFamily: FONTS.bold },
                 }}
             />
             <Stack.Screen

@@ -5,7 +5,8 @@ import {
     StyleSheet,
     TouchableOpacity,
     Image,
-    FlatList
+    FlatList,
+    useWindowDimensions
 } from 'react-native'
 import { FONTS, FONT_SIZES, COLORS, SPACING, CATEGORIES, CUISINES } from '../constants'
 import { normalize, getDateObject } from '../utils'
@@ -19,7 +20,7 @@ import ListRecipe from '../components/ListRecipe'
 
 const SORT_BY_FILTERS = [
     { label: "Nejrychlejších receptů", value: 'fastest' },
-    { label: "Nejdelších receptů", value: 'longest' }
+    { label: "Nejnovějších receptů", value: 'newest' }
 ]
 
 const DATE_FILTERS = [
@@ -40,6 +41,8 @@ const RecipesList = ({ route, navigation }) => {
     const datesPickerRef = useRef()
     const sortByFilterLast = useRef()
     const datesFilterLast = useRef()
+
+    const layout = useWindowDimensions()
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -97,12 +100,12 @@ const RecipesList = ({ route, navigation }) => {
         })
     }
 
-    const onSortByFilterChange = ({ label }) => {
-        sortByFilterLast.current = label
+    const onSortByFilterChange = ({ value, label }) => {
+        sortByFilterLast.current = { value, label }
     }
 
-    const onDatesFilterChange = ({ label }) => {
-        datesFilterLast.current = label
+    const onDatesFilterChange = ({ value, label }) => {
+        datesFilterLast.current = { value, label }
     }
 
     const onDatesFilterClose = () => {
@@ -125,26 +128,31 @@ const RecipesList = ({ route, navigation }) => {
         }
 
         const { sortBy, dates } = filters
-        const out = JSON.parse(JSON.stringify(recipes))
+        let out = JSON.parse(JSON.stringify(recipes))
 
-        switch (sortBy) {
+        switch (sortBy?.value) {
             case 'fastest':
                 out = out.sort((a, b) => a.duration - b.duration)
-            case 'longest':
-                out = out.sort((a, b) => b.duration - a.duration)
+                break
+            case 'newest':
+                out = out.sort((a, b) => a.createdDate - b.createdDate)
+                break
         }
 
         const today = new Date()
-        switch (dates) {
+        switch (dates?.value) {
             case 'last_month':
                 const monthAgo = new Date(today.getFullYear(), today.getMonth()-1, today.getDate())
                 out = out.filter(r => getDateObject(r.createdDate) >= monthAgo)
+                break
             case 'last_week':
                 const weekAgo = new Date(today.getFullYear(), today.getMonth(), today.getDate()-7)
                 out = out.filter(r => getDateObject(r.createdDate) >= weekAgo)
+                break
             case 'last_day':
                 const dayAgo = new Date(today.getFullYear(), today.getMonth(), today.getDate()-7)
                 out = out.filter(r => getDateObject(r.createdDate) >= dayAgo)
+                break
         }
 
         return out
@@ -188,7 +196,7 @@ const RecipesList = ({ route, navigation }) => {
                     {filters?.sortBy &&
                         <EvilIcons.Button name="close" backgroundColor="white" color="#000" activeOpacity={1} onPress={onRemoveSortByFilter}>
                             <Text style={styles.filterValue} >
-                                {filters.sortBy}
+                                {filters.sortBy?.label}
                             </Text>
                         </EvilIcons.Button>
                     }
@@ -221,7 +229,7 @@ const RecipesList = ({ route, navigation }) => {
                     {filters?.dates &&
                         <EvilIcons.Button name="close" backgroundColor="white" color="#000" activeOpacity={1} onPress={onRemoveDatesFilter}>
                             <Text style={styles.filterValue} >
-                                {filters.dates}
+                                {filters.dates?.label}
                             </Text>
                         </EvilIcons.Button>
                     }
@@ -232,11 +240,24 @@ const RecipesList = ({ route, navigation }) => {
 
     return (
         <>
-            <FlatList
+            {recipes.length > 0 ? <FlatList
                 data={filterRecipes()}
                 renderItem={({ item }) => ListRecipe({ recipe: item, navigation })}
                 keyExtractor={item => item.id}
-            />
+            /> : !isLoading ?
+                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'white' }} >
+                    <Text style={{ fontFamily: FONTS.bold, color: COLORS.grey, position: 'absolute', top: layout.height * 0.20 }}>Žádné recepty...</Text>
+                    <Image
+                        resizeMode='contain'
+                        source={require('../assets/not_found.png')}
+                        style={{
+                            height: normalize(280),
+                            width: normalize(280),
+                            position: 'absolute',
+                            top: layout.height * 0.26
+                        }}
+                    />
+                </View> : null}
 
             <Portal>
                 <Modalize ref={filtersModalRef} adjustToContentHeight={true}>

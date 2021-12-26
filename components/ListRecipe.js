@@ -33,7 +33,7 @@ const ListRecipe = ({ recipe, navigation, width }) => {
                 <Card.Content style={styles.cardContent}>
                     {recipe.picture ?
                         <Image
-                            source={recipe.picture ? { uri: recipe.picture } : require('../assets/adaptive-icon.png')}
+                            source={{uri: recipe.picture}}
                             resizeMode="cover"
                             style={{
                                 height: CARD_IMAGE_HEIGHT

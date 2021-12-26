@@ -122,13 +122,13 @@ const SignInScreen = ({ navigation }) => {
             />
             {
               showErrorMessages && !data.email ?
-                <Animatable.Text animation="bounceInLeft" style={styles.errorMessage}>Enter Email</Animatable.Text>
+                <Animatable.Text animation="bounceInLeft" style={styles.errorMessage}>Zadejte Email</Animatable.Text>
                 :
                 null
             }
 
             <Input
-              placeholder="Type Password"
+              placeholder="Vaše heslo"
               leftIcon={
                 <AntDesign
                   name="lock"
@@ -145,7 +145,7 @@ const SignInScreen = ({ navigation }) => {
                   }
                 </TouchableOpacity>
               }
-              label='Password'
+              label='Heslo'
               inputStyle={[styles.input, { color: '#FFF' }]}
               labelStyle={[styles.input, { fontSize: FONT_SIZES.large }]}
               containerStyle={styles.input_wrapper}
@@ -157,12 +157,12 @@ const SignInScreen = ({ navigation }) => {
             />
             {
               showErrorMessages && !data.password ?
-                <Animatable.Text animation="bounceInLeft" style={styles.errorMessage}>Enter Password</Animatable.Text>
+                <Animatable.Text animation="bounceInLeft" style={styles.errorMessage}>Zadejte heslo</Animatable.Text>
                 :
                 null
             }
 
-            <View style={{ alignItems: 'flex-end', paddingTop: 5 }} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+            {/* <View style={{ alignItems: 'flex-end', paddingTop: 5 }} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
               <Text style={{
                 color: '#fff',
                 paddingHorizontal: 5,
@@ -171,27 +171,27 @@ const SignInScreen = ({ navigation }) => {
                 fontSize: FONT_SIZES.x_small
               }}
                 onPress={() => navigation.navigate('SignUpScreen')}
-              > Forgot Password?</Text>
-            </View>
+              >Zapomněli jste heslo?</Text>
+            </View> */}
 
             <View style={styles.button_wrapper}>
               <Button
                 buttonStyle={styles.button}
                 titleStyle={{ fontFamily: FONTS.bold }}
-                title="Sign In"
+                title="Přihlásit se"
                 loading={data.buttonLoading}
                 onPress={onClickLogin}
               />
             </View>
             <View style={styles.footer}>
               <Text style={styles.footer_text}>
-                Don't have an account?
+                Nemáte účet?
               </Text>
               <Text
                 style={[styles.footer_text, { color: '#FFF', paddingHorizontal: 5, paddingVertical: 10 }]}
                 onPress={() => { navigation.navigate('SignUpScreen') }}
               >
-                Sign Up
+                Zaregistrovat se
               </Text>
             </View>
 

@@ -156,3 +156,64 @@ export const saveRecipe = (data) => async (dispatch, getState) => {
 
     return data
 }
+
+export const addRecipeToFavourites = (recipe) => async (dispatch, getState) => {
+    const userData = JSON.parse(JSON.stringify(getState().userState.currentUser))
+    userData.savedRecipes = Array.isArray(userData.savedRecipes) ? userData.savedRecipes.concat(recipe.id) : [recipe.id]
+
+    firebase.firestore()
+        .collection('users')
+        .doc(firebase.auth().currentUser.uid)
+        .set({
+            savedRecipes: userData.savedRecipes
+        }, { merge: true })
+
+    dispatch({ type: USER_STATE_CHANGE, currentUser: userData })
+
+    const savedRecipesData = getState().userState.savedRecipes
+    dispatch({ type: SAVED_RECIPES_STATE_CHANGE, 
+        savedRecipes: Array.isArray(savedRecipesData) ? savedRecipesData.concat(recipe) : [recipe] })
+}
+
+export const removeRecipeFromFavourites = (recipe) => async (dispatch, getState) => {
+    const userData = JSON.parse(JSON.stringify(getState().userState.currentUser))
+    userData.savedRecipes = userData.savedRecipes.filter(recipeId => recipeId !== recipe.id)
+
+    firebase.firestore()
+        .collection('users')
+        .doc(firebase.auth().currentUser.uid)
+        .set({
+            savedRecipes: userData.savedRecipes
+        }, { merge: true })
+
+    dispatch({ type: USER_STATE_CHANGE, currentUser: userData })
+
+    const savedRecipesData = getState().userState.savedRecipes
+    dispatch({ type: SAVED_RECIPES_STATE_CHANGE, 
+        savedRecipes: savedRecipesData.filter(r => r.id !== recipe.id) })
+}
+
+export const removeRecipe = (recipe) => async (dispatch, getState) => {
+    const userData = JSON.parse(JSON.stringify(getState().userState.currentUser))
+    userData.createdRecipes = userData.createdRecipes.filter(recipeId => recipeId !== recipe.id)
+
+    firebase.firestore()
+        .collection('users')
+        .doc(firebase.auth().currentUser.uid)
+        .set({
+            createdRecipes: userData.createdRecipes
+        }, { merge: true })
+
+    firebase.firestore()
+        .collection('recipes')
+        .doc(recipe.id)
+        .delete()
+
+    dispatch({ type: USER_STATE_CHANGE, currentUser: userData })
+
+    const createdRecipesData = getState().userState.createdRecipes
+    dispatch({ type: CREATED_RECIPES_STATE_CHANGE, 
+        createdRecipes: createdRecipesData.filter(r => r.id !== recipe.id) })
+
+    dispatch(fetchNewestRecipes())
+}
