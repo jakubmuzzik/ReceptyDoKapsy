@@ -194,7 +194,7 @@ const Recipe = ({ route, navigation, savedRecipes, createdRecipes, addRecipeToFa
                                 <Text
                                     onPress={() => setMoreTextShown(v => !v)}
                                     style={{ fontFamily: FONTS.bold, marginTop: 10 }}>
-                                    {moreTextShown ? 'Read less...' : 'Read more...'}
+                                    {moreTextShown ? 'Zobrazit méně...' : 'Zobrazit více...'}
                                 </Text>
                             )
                         }

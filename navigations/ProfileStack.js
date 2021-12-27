@@ -4,7 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 import { MaterialCommunityIcons, AntDesign } from '@expo/vector-icons'
 import Profile from '../screens/Profile'
 import PersonalDetails from '../screens/PersonalDetails'
-import AppSettings from '../screens/AppSettings'
+import AppInfo from '../screens/AppInfo'
 
 import { SPACING, FONTS } from '../constants'
 
@@ -38,10 +38,10 @@ const ProfileStack = ({ navigation }) => {
                 }}
             />
             <Stack.Screen
-                name="AppSettings"
-                component={AppSettings}
+                name="AppInfo"
+                component={AppInfo}
                 options={{
-                    headerTitle: 'Nastavení aplikace',
+                    headerTitle: 'O aplikaci',
                     headerBackTitle: 'Zpět',
                     headerBackTitleStyle: { fontFamily: FONTS.bold },
                     headerTitleStyle: { fontFamily: FONTS.bold }

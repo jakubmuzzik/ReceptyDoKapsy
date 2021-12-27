@@ -32,7 +32,7 @@ const Profile = ({ currentUser, navigation, saveProfile }) => {
     }
 
     const onAppSettingsPress = () => {
-        navigation.navigate('AppSettings')
+        navigation.navigate('AppInfo')
     }
 
     const showToast = (message, variant) => {
@@ -186,7 +186,7 @@ const Profile = ({ currentUser, navigation, saveProfile }) => {
                         Osobní údaje
                     </Text>
                     <Text onPress={onAppSettingsPress} style={styles.listItem}>
-                        Nastavení aplikace
+                        O aplikaci
                     </Text>
                 </ScrollView>
                 <View>
