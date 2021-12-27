@@ -101,12 +101,12 @@ const Recipe = ({ route, navigation, savedRecipes, createdRecipes, addRecipeToFa
                 />
             }
             useNativeDriver={true}
-            style={{ width: windowWidth, overflow: 'visible' }}
+            style={{ width: windowWidth }}
             keyboardShouldPersistTaps='always'
             showsVerticalScrollIndicator={false}
-        >
-            <TriggeringView style={{ paddingBottom: insets.bottom, flex: 1 }}>
-                <View style={styles.headerButtons} >
+            headerContainerStyle={{overflow: 'visible', zIndex: 3, elevation: 4}}
+            renderFixedForeground={() => (
+                <View style={{ justifyContent: "center", alignItems: "flex-end", top: HEADER_IMAGE_HEIGHT-normalize(30) }} >
                     {!createdRecipes?.includes(recipe.id) && <TouchableOpacity
                         style={[styles.shadow, styles.saveButton, { shadowColor: COLORS.green, marginRight: normalize(10) }]}
                         activeOpacity="1"
@@ -131,7 +131,9 @@ const Recipe = ({ route, navigation, savedRecipes, createdRecipes, addRecipeToFa
                     </TouchableOpacity>}
 
                 </View>
-
+              )}
+        >
+            <TriggeringView style={{ paddingBottom: insets.bottom, flex: 1, zIndex: 1, elevation: 1}}>
                 <View style={{ flex: 1 }}>
                     <Text style={styles.recipeName} numberOfLines={1}>{recipe.name}</Text>
 
@@ -224,10 +226,11 @@ const styles = StyleSheet.create({
     },
     headerButtons: {
         position: 'absolute',
-        top: -normalize(30),
+        top: normalize(30),
         right: 0,
         flexDirection: 'row',
-        zIndex: 2
+        zIndex: 2,
+        elevation: 3
     },
     deleteButton: {
         padding: SPACING.small,

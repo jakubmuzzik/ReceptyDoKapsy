@@ -159,7 +159,8 @@ const styles = StyleSheet.create({
     },
     tabSearch: {
         paddingHorizontal: normalize(5),
-        zIndex: 3
+        zIndex: 3,
+        elevation: 4
     },
     tabItems: {
         flexDirection: 'row',
