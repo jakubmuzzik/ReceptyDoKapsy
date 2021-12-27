@@ -106,7 +106,7 @@ const Recipe = ({ route, navigation, savedRecipes, createdRecipes, addRecipeToFa
             showsVerticalScrollIndicator={false}
         >
             <TriggeringView style={{ paddingBottom: insets.bottom, flex: 1 }}>
-                <View style={styles.headerButtons} zIndex="2">
+                <View style={styles.headerButtons} >
                     {!createdRecipes?.includes(recipe.id) && <TouchableOpacity
                         style={[styles.shadow, styles.saveButton, { shadowColor: COLORS.green, marginRight: normalize(10) }]}
                         activeOpacity="1"
@@ -226,7 +226,8 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: -normalize(30),
         right: 0,
-        flexDirection: 'row'
+        flexDirection: 'row',
+        zIndex: 2
     },
     deleteButton: {
         padding: SPACING.small,

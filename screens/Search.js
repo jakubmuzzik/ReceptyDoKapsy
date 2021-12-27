@@ -18,6 +18,9 @@ import { firebase } from '../firebase/config'
 import { ListItem, Avatar } from 'react-native-elements'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { ActivityIndicator } from 'react-native-paper'
+import { LogBox } from 'react-native'
+
+LogBox.ignoreLogs(['Setting a timer'])
 
 export const Search = ({ navigation }) => {
     const [isLoading, setIsLoading] = useState(false)
@@ -104,7 +107,7 @@ export const Search = ({ navigation }) => {
 
     return (
         <View style={[styles.container, { backgroundColor: 'white', paddingTop: insets.top }]}>
-            <View style={styles.tabSearch} zIndex="3">
+            <View style={styles.tabSearch}>
                 <SearchBar
                     placeholder="Search"
                     onChangeText={onSearch}
@@ -155,7 +158,8 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     tabSearch: {
-        paddingHorizontal: normalize(5)
+        paddingHorizontal: normalize(5),
+        zIndex: 3
     },
     tabItems: {
         flexDirection: 'row',

@@ -51,7 +51,7 @@ const PersonalDetails = ({ currentUser, saveProfile, navigation }) => {
     }
 
     const onSavePress = async () => {
-        if (!userData.name || userData.length < 1) {
+        if (!userData.name || userData.name.length < 1) {
             setShowErrorMessages(true)
             return
         }
@@ -135,5 +135,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center', 
         alignItems: 'center', 
         opacity: 0.3
-    }
+    },
+    error_message: {
+        fontFamily: FONTS.light,
+        color: '#FF0000',
+        fontSize: FONT_SIZES.x_small,
+        marginTop: SPACING.xx_small
+    },
 })
