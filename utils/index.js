@@ -37,7 +37,7 @@ export const getDate = (timestamp, getDayName = false, getYear = false) => {
 
   out += getDayName ? DAY_NAMES[dateTime.getDay()] + ', ' : ''
   out += dateTime.getDate() + '.' + (dateTime.getMonth() + 1)
-  out += getYear ? ' ' + dateTime.getFullYear() : ''
+  out += getYear ? '.' + dateTime.getFullYear() : ''
 
   return out
 }

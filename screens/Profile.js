@@ -143,7 +143,7 @@ const Profile = ({ currentUser, navigation, saveProfile }) => {
     return (
         <View style={{ 
             flex: 1, 
-            flexDirection: 'center', 
+            justifyContent: 'center', 
             alignItems: 'center', 
             marginTop: headerHeight,
             paddingHorizontal: SPACING.small

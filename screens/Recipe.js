@@ -258,7 +258,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.30,
         shadowRadius: 4.65,
 
-        elevation: 8,
+        elevation: 3,
     },
     immageHeaderButtonText: {
         backgroundColor: 'transparent',
@@ -314,6 +314,7 @@ const styles = StyleSheet.create({
     sectionText: { 
         fontFamily: FONTS.medium, 
         fontSize: FONT_SIZES.small, 
-        color: '#FFF' 
+        color: '#FFF' ,
+        paddingLeft: SPACING.small
     }
 })
