@@ -48,7 +48,8 @@
     "reanimated-bottom-sheet": "^1.0.0-alpha.22",
     "redux": "^4.1.2",
     "redux-persist": "^6.0.0",
-    "redux-thunk": "^2.4.1"
+    "redux-thunk": "^2.4.1",
+    "expo-font": "~10.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"
